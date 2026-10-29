@@ -4,7 +4,7 @@ import PDFDocument from 'pdfkit';
 import ExcelJS from 'exceljs';
 import { z } from 'zod';
 import { calculateEstimate, inr } from 'shared';
-import { Booking, Certificate, Client, Enquiry, Estimate, Master, Pilot, User } from '../models/index.js';
+import { Booking, Certificate, Client, Enquiry, Estimate, Pilot, User } from '../models/index.js';
 import { auth, rbac } from '../middleware/auth.js';
 import { AppError, ok, wrap } from '../utils/errors.js';
 import { nextCode } from '../utils/ids.js';
@@ -156,7 +156,12 @@ const redact = (est, role) => {
   return o;
 };
 
-estimates.post('/calculate', wrap(async (req, res) => ok(res, calculateEstimate(await lockCommercials(req.body, req.user.role, req.body.id)))));
+estimates.post('/calculate', wrap(async (req, res) => {
+  const t = calculateEstimate(await lockCommercials(req.body, req.user.role, req.body.id));
+  // Office sees direct costs, GST and the grand total, never the margin / overhead / contingency values.
+  if (req.user.role === 'office') { delete t.margin; delete t.overhead; delete t.contingency; delete t.subtotal; delete t.beforeGst; }
+  ok(res, t);
+}));
 
 // Office cannot change overhead / contingency / margin: they are forced back to the saved or default values.
 async function lockCommercials(inputs, role, id) {
@@ -275,8 +280,6 @@ estimates.get('/:id/pdf', wrap(async (req, res) => {
   doc.fontSize(10).fillColor('#64748B').text(`Client: ${e.clientName || '-'}   ·   Project: ${e.projectType || '-'}   ·   Option: ${e.scenarioName}`, 50, 140)
     .text(`Valid until: ${e.validUntil?.toISOString().slice(0, 10)}`, 50, 155);
   // Client PDF: line items, total and GST only. No overhead, contingency or margin.
-  const loaded = (lines, extra) => lines;
-  void loaded;
   const rows = [
     ['Pilot services', t.lines.pilots + t.lines.copilots], ['Drone & equipment', t.lines.drones], ['Travel & stay', t.lines.travel + t.lines.hotel + t.lines.food],
     ['Software & processing', t.lines.software], ['Report & data delivery', t.lines.report],
@@ -312,4 +315,3 @@ estimates.get('/:id/excel', wrap(async (req, res) => {
   res.end();
 }));
 
-void Master;

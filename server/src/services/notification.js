@@ -1,4 +1,4 @@
-import { Notification, NotificationLog, User } from '../models/index.js';
+import { Notification, NotificationLog } from '../models/index.js';
 import { emit } from '../realtime/io.js';
 
 /** notify(event, payload): in-app bell for Office/Admin + email log for the client (email transport is pluggable). */
@@ -28,4 +28,3 @@ export async function notify(event, payload) {
 
 export const unreadFor = (user) =>
   Notification.find({ $or: [{ role: user.role }, { userId: user.id }] }).sort({ createdAt: -1 }).limit(20);
-void User;

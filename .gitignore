@@ -4,3 +4,7 @@ node_modules
 dist
 uploads
 *.pdf
+.api.log
+.site.log
+.portal.log
+portal/dist

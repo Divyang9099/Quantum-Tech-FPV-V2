@@ -2,7 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import {
-  AuditLog, Availability, Booking, Certificate, Client, Document, Drone, Enquiry, Estimate, Master, Notification, Pilot, User,
+  AuditLog, Availability, Booking, Certificate, Document, Drone, Enquiry, Master, Notification, Pilot, User,
 } from '../models/index.js';
 import { auth, rbac } from '../middleware/auth.js';
 import { AppError, ok, wrap } from '../utils/errors.js';
@@ -97,6 +97,14 @@ settings.put('/website', A, wrap(async (req, res) => {
   ok(res, { showPilotNames: !!req.body.showPilotNames });
 }));
 
+// Restores the starting demo data. Only available when DEMO_MODE=true.
+settings.post('/reset-demo', A, wrap(async (_req, res) => {
+  if (process.env.DEMO_MODE !== 'true') throw new AppError(403, 'FORBIDDEN', 'Demo reset is switched off.');
+  const { seed } = await import('../seed/seed.js');
+  await seed();
+  ok(res, true);
+}));
+
 // ---------------- Users ----------------
 export const users = Router();
 users.use(auth, A);
@@ -174,4 +182,3 @@ documents.get('/', wrap(async (req, res) => {
 documents.post('/', A, wrap(async (req, res) => { const d = await Document.create({ ...req.body, uploadedBy: req.user.id }); await audit(req.user, 'Document uploaded', 'documents', d.title); res.status(201).json({ success: true, data: d }); }));
 documents.delete('/:id', A, wrap(async (req, res) => { await Document.findByIdAndDelete(req.params.id); await audit(req.user, 'Document deleted', 'documents', req.params.id); ok(res, true); }));
 
-void Client; void Estimate; void AppError;

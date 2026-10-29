@@ -39,7 +39,7 @@ window.QTBooking = (function () {
         ${nav(true, 'submit', state.busy ? 'Booking…' : 'Confirm booking', !state.busy)}`;
     } else {
       const r = state.result;
-      const link = `${location.origin}${location.pathname.replace('book.html', 'track.html')}?id=${r.bookingId}&t=${r.token}`;
+      const link = `${new URL('track.html', location.href).href}?id=${r.bookingId}&t=${r.token}`;
       root.innerHTML = `<div class="panel panel-pad confirm"><div class="tick">✓</div><h2 style="margin:0">Booking confirmed</h2>
         <p style="color:var(--muted)">We have sent the details to ${esc(state.form.email)}.</p>
         <div class="idbox"><span>Booking ID</span><b class="mono">${r.bookingId}</b><button class="btn btn-outline" data-act="copy" style="padding:6px 12px">Copy</button></div>
