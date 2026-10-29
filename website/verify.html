@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify certificate</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div id="site-header"></div>
+<div class="page-head"><div class="container"><div class="eyebrow">Certificate verification</div><h1>Verify a pilot certificate</h1></div></div>
+<section style="padding:36px 0 72px">
+  <div class="container" style="max-width:640px"><div id="out" class="panel panel-pad"><span class="spinner"></span> Checking certificate…</div></div>
+</section>
+<div id="site-footer"></div>
+<script src="config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/layout.js"></script>
+<script>
+  const t = new URLSearchParams(location.search).get('t');
+  const fmt = (d) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  (t ? api.verify(t) : Promise.reject({ message: 'No certificate code was provided.' })).then((c) => {
+    $('#out').innerHTML = `<div class="confirm"><div class="tick" style="${c.valid ? '' : 'background:#FEF2F2;color:#DC2626'}">${c.valid ? '✓' : '✕'}</div>
+      <h2 style="margin:0">${c.valid ? 'Valid certificate' : 'Certificate expired'}</h2>
+      <p style="color:var(--muted)">Issued by Quantum Tech FPV</p>
+      <div class="kv" style="text-align:left"><div><small>Pilot</small><b>${esc(c.holderName)}</b></div><div><small>Level</small><b>${esc(c.level)}</b></div><div><small>Certificate no.</small><b class="mono">${esc(c.certNo)}</b></div><div><small>Issued</small><b>${fmt(c.issueDate)}</b></div><div><small>Valid till</small><b>${fmt(c.expiryDate)}</b></div></div></div>`;
+  }).catch((e) => { $('#out').innerHTML = `<div class="alert bad" style="margin:0">${esc(e.message)}</div>`; });
+</script>
+</body>
+</html>

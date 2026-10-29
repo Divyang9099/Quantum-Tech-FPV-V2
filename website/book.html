@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book a pilot</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div id="site-header"></div>
+<div class="page-head"><div class="container"><div class="eyebrow">Book a pilot</div><h1>Book a certified pilot</h1><p>Pick a project, a date and a free slot. Your booking is confirmed instantly.</p></div></div>
+
+<section style="padding:36px 0 72px">
+  <div class="container" style="max-width:980px">
+    <!-- Everything below renders inside this one div, so it can be pasted into WordPress/Elementor. -->
+    <div id="qt-booking"></div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/layout.js"></script>
+<script src="assets/js/book.js"></script>
+<script>
+  // Load Socket.IO from the API server, then start the widget (works without it, with 20 s polling).
+  const s = document.createElement('script');
+  s.src = QT.API + '/socket.io/socket.io.js';
+  s.onload = s.onerror = () => { const l = document.createElement('script'); l.src = 'assets/js/realtime.js'; l.onload = () => QTBooking.mount('#qt-booking'); document.body.appendChild(l); };
+  document.body.appendChild(s);
+</script>
+</body>
+</html>

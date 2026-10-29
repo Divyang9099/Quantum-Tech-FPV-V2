@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Certified drone pilots, booked in minutes</title>
+  <meta name="description" content="Book a certified FPV and survey drone pilot online, or train to become one. Quantum Tech FPV, Pune.">
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <div class="eyebrow">Pilot services &amp; training · Pune</div>
+      <h1>Certified drone pilots, booked in minutes.</h1>
+      <p class="lead">Choose your project, pick a free slot with a certified pilot and get an instant confirmation. No calls, no waiting.</p>
+      <div class="cta">
+        <a class="btn btn-primary btn-lg" href="book.html">Book a pilot</a>
+        <a class="btn btn-outline btn-lg" href="request.html">Send a custom request</a>
+      </div>
+      <div class="chips">
+        <span class="chip"><span class="dot"></span><span id="chip-pilots">Checking pilots…</span></span>
+        <span class="chip">⚡ Instant confirmation</span>
+        <span class="chip">✔ Certified &amp; verified pilots</span>
+      </div>
+    </div>
+    <div class="hero-img"><img src="assets/img/hero.webp" alt="Quantum Tech FPV hexacopter with optic fiber spool"></div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="head"><div class="eyebrow">How it works</div><h2>Booked in three steps</h2><p>Everything you see is live: when a slot is taken, it disappears for everyone.</p></div>
+    <div class="grid g3">
+      <div class="card"><div class="icon">1</div><h3>Pick your project</h3><p>Survey, mapping, inspection, events or tethered surveillance. Choose a city and a date.</p></div>
+      <div class="card"><div class="icon">2</div><h3>Choose a free slot</h3><p>See every certified pilot and their open slots for the day, updated live.</p></div>
+      <div class="card"><div class="icon">3</div><h3>Get your booking ID</h3><p>Confirmed at once. Track every stage, from pilot check-in to report delivered.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="container">
+    <div class="head"><div class="eyebrow">Pilot services</div><h2>What we fly for you</h2><p>From a single-day shoot to multi-day survey projects.</p></div>
+    <div class="grid g3" id="services"></div>
+    <p style="margin-top:28px"><a class="btn btn-outline" href="request.html">Need something that does not fit a slot? Send a custom request →</a></p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="head"><div class="eyebrow">Why Quantum Tech FPV</div><h2>Indigenous technology. Certified people.</h2></div>
+    <div class="grid g4">
+      <div class="card stat"><b>5+</b><span>Defence contracts fulfilled</span></div>
+      <div class="card stat"><b>3</b><span>Service arms supplied: Army, Navy, Air Force</span></div>
+      <div class="card stat"><b>100%</b><span>Contract fulfilment</span></div>
+      <div class="card stat"><b>Pune</b><span>Designed and assembled in India</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="training">
+  <div class="container grid g2" style="align-items:center;gap:48px">
+    <div>
+      <div class="eyebrow">Training academy</div>
+      <h2>Train to become a certified pilot</h2>
+      <p class="lead" style="font-size:17px">Our course takes you from first flight to a QR-verified certificate. Pass the final test and join our pilot pool.</p>
+      <p style="margin:20px 0"><span class="badge olive">✔ QR-verified certificate</span> &nbsp; <span class="badge olive">✔ Join the pilot pool</span></p>
+      <a class="btn btn-outline" href="request.html">Ask about the next batch</a>
+    </div>
+    <div class="grid" style="gap:14px">
+      <div class="card"><span class="step-n">01</span><h3 style="margin-top:6px">Enrol &amp; attend classes</h3><p>Hands-on FPV basics, safety and regulations.</p></div>
+      <div class="card"><span class="step-n">02</span><h3 style="margin-top:6px">Final test</h3><p>Practical and written assessment.</p></div>
+      <div class="card"><span class="step-n">03</span><h3 style="margin-top:6px">Certified &amp; bookable</h3><p>Approved pilots appear for clients to book.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-band">
+      <div><h2 style="margin:0;color:#fff">Already booked? Track your mission.</h2><p>Enter your booking ID and tracking token to see the live status.</p></div>
+      <a class="btn btn-primary btn-lg" href="track.html">Track booking</a>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/layout.js"></script>
+<script>
+  const icons = { Survey: '📐', Mapping: '🗺️', Inspection: '🔍', 'Event shoot': '🎥', 'Tethered surveillance': '📡', 'Agriculture spraying': '🌾', 'Real estate': '🏢', 'Construction monitoring': '🏗️', 'Solar inspection': '☀️' };
+  api.pilots().then((d) => {
+    $('#chip-pilots').textContent = `${d.pilots.length} certified pilots available`;
+    $('#services').innerHTML = d.projectTypes.map((p) => `<a class="card" href="book.html?type=${encodeURIComponent(p.name)}" style="color:inherit"><div class="icon">${icons[p.name] || '🚁'}</div><h3>${esc(p.name)}</h3><p>Book a certified pilot →</p></a>`).join('');
+  }).catch(() => { $('#chip-pilots').textContent = 'Certified pilots available'; });
+</script>
+</body>
+</html>

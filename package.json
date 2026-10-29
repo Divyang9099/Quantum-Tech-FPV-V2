@@ -1,0 +1,11 @@
+{
+  "name": "quantum-fpv-platform",
+  "private": true,
+  "workspaces": ["server", "portal", "shared"],
+  "scripts": {
+    "dev:server": "npm run dev -w server",
+    "dev:portal": "npm run dev -w portal",
+    "dev:website": "npx --yes serve website -l 5500",
+    "seed": "npm run seed -w server"
+  }
+}

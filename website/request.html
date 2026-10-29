@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Custom request</title>
+  <link rel="icon" href="assets/img/logo.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div id="site-header"></div>
+<div class="page-head"><div class="container"><div class="eyebrow">Custom request</div><h1>Tell us about your project</h1><p>For multi-day work, large areas or special requirements. We reply with a quotation.</p></div></div>
+<section style="padding:36px 0 72px">
+  <div class="container" style="max-width:760px">
+    <form class="panel panel-pad" id="f" novalidate>
+      <div id="msg"></div>
+      <div class="row2"><div class="field"><label for="name">Your name</label><input id="name"><div class="err" data-e="name"></div></div><div class="field"><label for="company">Company (optional)</label><input id="company"></div></div>
+      <div class="row2"><div class="field"><label for="phone">Mobile number</label><input id="phone" type="tel"><div class="err" data-e="phone"></div></div><div class="field"><label for="email">Email</label><input id="email" type="email"><div class="err" data-e="email"></div></div></div>
+      <div class="field"><label for="details">Project details</label><textarea id="details" rows="6" placeholder="What do you need, where, for how many days, and what deliverables?"></textarea><div class="err" data-e="details"></div></div>
+      <button class="btn btn-primary btn-lg" type="submit" id="go">Send request</button>
+    </form>
+    <div id="done" class="panel panel-pad confirm" style="display:none"><div class="tick">✓</div><h2 style="margin:0">Request received</h2><p style="color:var(--muted)">Our team will get back to you shortly.</p><div class="idbox"><span>Reference</span><b class="mono" id="ref"></b></div><p><a class="btn btn-outline" href="index.html">Back to home</a></p></div>
+  </div>
+</section>
+<div id="site-footer"></div>
+<script src="config.js"></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/layout.js"></script>
+<script>
+  $('#f').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.querySelectorAll('[data-e]').forEach((x) => (x.textContent = ''));
+    $('#msg').innerHTML = '';
+    const v = (id) => $('#' + id).value.trim();
+    const d = { name: v('name'), company: v('company'), phone: v('phone').replace(/\s/g, ''), email: v('email'), details: v('details') };
+    const err = {};
+    if (d.name.length < 2) err.name = 'Please enter your name.';
+    if (!/^(\+91[\s-]?)?[6-9]\d{9}$/.test(d.phone)) err.phone = 'Enter a valid 10-digit mobile number.';
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)) err.email = 'Enter a valid email address.';
+    if (d.details.length < 10) err.details = 'Please describe your project (at least 10 characters).';
+    if (Object.keys(err).length) return Object.entries(err).forEach(([k, m]) => ($(`[data-e=${k}]`).textContent = m));
+    $('#go').disabled = true; $('#go').textContent = 'Sending…';
+    try { const r = await api.enquire(d); $('#f').style.display = 'none'; $('#done').style.display = 'block'; $('#ref').textContent = r.refNo; }
+    catch (x) { $('#msg').innerHTML = `<div class="alert bad">${esc(x.message)}</div>`; $('#go').disabled = false; $('#go').textContent = 'Send request'; }
+  });
+</script>
+</body>
+</html>

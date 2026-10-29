@@ -1,0 +1,30 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "seed": "node src/seed/seed.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.0.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.6.0",
+    "nanoid": "^5.0.7",
+    "pdfkit": "^0.15.0",
+    "qrcode": "^1.5.4",
+    "shared": "*",
+    "socket.io": "^4.7.5",
+    "zod": "^3.23.8"
+  }
+}
